@@ -24,7 +24,7 @@
         messages: [
           {
             text:'随着社会的进步随着社会的进步随着社会的进步随着社会的进步随着社会的进步随着社会的进步',
-            icon:'../assets/timg.jpeg',
+            icon:'/static/timg.jpeg',
             date:'2018-04-11 19:43',
             id:'0'
           },
@@ -79,7 +79,7 @@
     width: 0.4rem;
     height: 0.6rem;
     background: url('../assets/rightarrow.png') no-repeat center/100%;
-    margin-right: 0.5rem;
+    margin-left: 0.5rem;
   }
 
 </style>

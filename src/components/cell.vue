@@ -1,8 +1,8 @@
 <template>
   <div @click="handleClick" class="noticecell">
     <div class="maincontent">
-      <div class="text">{{content}}</div>
-      <div class="icon" v-if="item.icon" :style="{background:'url(' + item.icon + ')' + 'no-repeat center/ 100%'}"></div>
+      <span class="text">{{content}}</span>
+      <img class="icon" width="80" height="80" v-if="item.icon" :src="item.icon"/>
     </div>
     <div class="date">{{item.date}}</div>
   </div>
@@ -13,9 +13,8 @@
   export default {
     computed:{
       content() {
-
         return this.item.text
-      }
+      },
     },
     props:['item'],
     name:'NoticeCell',
@@ -41,9 +40,9 @@
   .maincontent {
 
     margin-top: 0.5rem;
+    height: 7rem;
     display: flex;
     justify-content: space-between;
-
   }
 
   .text {
@@ -53,9 +52,9 @@
 
   .icon {
 
-    width: 8rem;
-    height: 8rem;
     border-radius: 5px;
+    margin-left: 2rem;
+    align-self: center;
   }
 
   .date {
