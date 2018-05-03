@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function queryMsgList(query) {
   return request({
-    url: '/api/jsestate-service/msg/msg_list',
+    url: '/jsestate-service/msg/msg_list',
     method: 'POST',
     data: query
   })
@@ -10,7 +10,7 @@ export function queryMsgList(query) {
 
 export function queryMsgDetail(query) {
   return request({
-    url: '/api/jsestate-service/msg/msg_detail',
+    url: '/jsestate-service/msg/msg_detail',
     method: 'POST',
     data: query
   })

@@ -8,7 +8,7 @@
         <div class="history">历史</div><div class="rightarrow"></div>
       </div>
     </div>
-    <notice-cell v-for="item in this.msgList" v-bind:key="item.id" :item="item" @select="selectMessage(item)"></notice-cell>
+    <notice-cell v-for="item in this.msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
   </div>
 </template>
 
@@ -16,7 +16,6 @@
 
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
-  import { getDateStr } from '@/utils/common'
 
   export default {
     components: { NoticeCell },
@@ -37,6 +36,7 @@
         console.log('getList')
 
         let data = {
+
           token:"28816fb0c5d74a9fae0549fd78e46e0a",
           userId:"061a96ebdf0247918aa684b9278053e3"
         }

@@ -6,7 +6,7 @@ export function getDateStr(timestamp) {
   
   let month = date.getMonth()
   
-  let day = date.getDay()
+  let day = date.getDate()
   
   let hour = date.getHours()
   

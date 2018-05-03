@@ -4,21 +4,33 @@
       <span class="text">{{content}}</span>
       <img class="icon" width="80" height="80" v-if="icon" :src="icon"/>
     </div>
-    <div class="date">{{createData}}</div>
+    <div class="date">{{date}}</div>
   </div>
 </template>
 
 <script>
 
+  import { getDateStr } from "@/utils/common"
+
   export default {
     computed:{
       content() {
-        return this.item.content
-      },
-      createData() {
 
-        return this.item.date
+        if (this.item.msgContent.length > 50) {
+
+          return this.item.msgContent.substring(0, 50) + '...'
+        }
+
+        return this.item.msgContent
       },
+      date() {
+
+        return getDateStr(this.item.createTime)
+      },
+      icon() {
+
+        return this.item.imageUrl
+      }
     },
     props:['item'],
     name:'NoticeCell',
