@@ -2,9 +2,9 @@
   <div @click="handleClick" class="noticecell">
     <div class="maincontent">
       <span class="text">{{content}}</span>
-      <img class="icon" width="80" height="80" v-if="item.icon" :src="item.icon"/>
+      <img class="icon" width="80" height="80" v-if="item.imageUrl" :src="item.imageUrl"/>
     </div>
-    <div class="date">{{item.date}}</div>
+    <div class="date">{{createData}}</div>
   </div>
 </template>
 
@@ -13,7 +13,11 @@
   export default {
     computed:{
       content() {
-        return this.item.text
+        return this.item.msgContent
+      },
+      createData() {
+
+        return this.item.createTime
       },
     },
     props:['item'],
@@ -21,7 +25,7 @@
     methods:{
       handleClick() {
 
-        this.$emit('selectId', this.item.id)
+        this.$emit('select', this.item.id)
       }
     }
   }
@@ -32,7 +36,7 @@
 
   .noticecell {
 
-    border-top: 1px solid red;
+    border-bottom: 1px solid grey;
     height: 8rem;
     position: relative;
   }
@@ -47,20 +51,23 @@
 
   .text {
 
-
+    font-size: 1rem;
+    margin-right: 1rem;
   }
 
   .icon {
 
     border-radius: 5px;
-    margin-left: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
     align-self: center;
   }
 
   .date {
 
     position: absolute;
-    left: 1rem;
+    font-size: 0.8rem;
+    left: 0;
     bottom: 0.5rem;
   }
 
