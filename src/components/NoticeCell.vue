@@ -2,7 +2,7 @@
   <div @click="handleClick" class="noticecell">
     <div class="maincontent">
       <span class="text">{{content}}</span>
-      <img class="icon" width="80" height="80" v-if="item.imageUrl" :src="item.imageUrl"/>
+      <img class="icon" width="80" height="80" v-if="icon" :src="icon"/>
     </div>
     <div class="date">{{createData}}</div>
   </div>
@@ -13,11 +13,11 @@
   export default {
     computed:{
       content() {
-        return this.item.msgContent
+        return this.item.content
       },
       createData() {
 
-        return this.item.createTime
+        return this.item.date
       },
     },
     props:['item'],

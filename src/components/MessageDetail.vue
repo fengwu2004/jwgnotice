@@ -28,9 +28,7 @@
 
         this.content = msg.msgContent
 
-        let date = new Date(msg.createTime)
-
-        this.date = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + '  ' + date.getHours() + ':' + date.getMinutes()
+        this.date = new Date(msg.createTime).toLocaleString()
       })
     },
     data() {

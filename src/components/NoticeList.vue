@@ -15,7 +15,8 @@
 <script>
 
   import NoticeCell from '@/components/NoticeCell'
-  import { queryMsgList } from "@/api/message";
+  import { queryMsgList } from "@/api/message"
+  import { getDateStr } from '@/utils/common'
 
   export default {
     components: { NoticeCell },
