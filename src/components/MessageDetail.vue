@@ -8,14 +8,31 @@
 
 <script>
 
-  import { queryMsgDetail } from "@/api/message";
+  import { queryMsgDetail } from "@/api/message"
+  import { getQueryString } from '@/utils/common'
 
   export default {
     name:'MessageDetail',
     created() {
 
+      let msgId = getQueryString('msgId')
+
+      let userId = getQueryString('userId')
+
+      let token = getQueryString('token')
+
+      let routeparams = this.$route.params
+
+      this.msgId = routeparams.msgId ? routeparams.msgId : msgId
+
+      this.userId = routeparams.userId ? routeparams.msgId : userId
+
+      this.token = routeparams.token ? routeparams.token : token
+
       let data = {
-        msgId:this.$route.params.msgId
+        msgId:this.msgId,
+        userId:this.userId,
+        token:this.token
       }
 
       queryMsgDetail(data).then(response => {
@@ -36,6 +53,8 @@
         title:'',
         date:'',
         content:'',
+        userId:'',
+        token:''
       }
     }
   }

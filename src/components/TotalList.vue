@@ -18,26 +18,16 @@
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
   import MeScroll from 'mescroll.js'
-
-  function getQueryString(name) {
-    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) {
-      return decodeURI(r[2]);
-    }
-    return null;
-  }
+  import { getQueryString } from "@/utils/common"
 
   export default {
     components: { NoticeCell },
     name: 'TotalList',
     mounted() {
 
-      let userId = getQueryString('userId')
+      this.userId = getQueryString('userId')
 
-      let token = getQueryString('token')
-
-      console.log(userId, token)
+      this.token = getQueryString('token')
 
       this.mescroll = new MeScroll('mescroll', {
 
@@ -72,7 +62,9 @@
         let data = {
 
           pageSize:pageSize,
-          pageIndex:pageIndex
+          pageIndex:pageIndex,
+          userId:this.userId,
+          token:this.token
         }
 
         queryMsgList(data)
@@ -108,6 +100,8 @@
     position: fixed;
     top: 0;
     bottom: 0;
+    left: 1rem;
+    width: calc(100% - 1rem);
     height: auto;
   }
 

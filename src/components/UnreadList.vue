@@ -26,26 +26,18 @@
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
   import MeScroll from 'mescroll.js'
-
-  function getQueryString(name) {
-    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) {
-      return decodeURI(r[2]);
-    }
-    return null;
-  }
+  import { getQueryString } from "@/utils/common"
 
   export default {
     components: { NoticeCell },
     name: 'UnreadList',
     mounted() {
 
-      let userId = getQueryString('userId')
+      this.userId = getQueryString('userId')
 
-      let token = getQueryString('token')
+      this.token = getQueryString('token')
 
-      console.log(userId, token)
+      console.log(this.userId, this.token)
 
       this.mescroll = new MeScroll('mescroll', {
 
@@ -80,7 +72,9 @@
         let data = {
           isRead:false,
           pageSize:pageSize,
-          pageIndex:pageIndex
+          pageIndex:pageIndex,
+          userId:this.userId,
+          token:this.token
         }
 
         queryMsgList(data)
@@ -100,6 +94,8 @@
         pageSize:20,
         pageIndex:1,
         msgList:[],
+        userId:'',
+        token:''
       }
     },
   }
