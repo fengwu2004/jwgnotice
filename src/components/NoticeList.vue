@@ -8,7 +8,9 @@
         <div class="history">历史</div><div class="rightarrow"></div>
       </div>
     </div>
-    <notice-cell v-for="item in this.msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
+    <div id="mescroll" class="mescroll">
+      <notice-cell v-for="item in this.msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
+    </div>
   </div>
 </template>
 
@@ -16,6 +18,7 @@
 
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
+  import MeScroll from 'mescroll.js'
 
   export default {
     components: { NoticeCell },
@@ -24,7 +27,20 @@
 
       this.getList()
     },
+    mounted() {
+
+      this.mescroll = new MeScroll('mescroll', {
+
+        up: {
+          callback:this.upCallback,
+        }
+      })
+    },
     methods:{
+      upCallback(page) {
+
+        console.log(page)
+      },
       selectMessage(msg) {
 
         let route = {name:'messagedetail', params: { msgId:msg.msgId }}
@@ -51,6 +67,7 @@
     },
     data () {
       return {
+        mescroll:null,
         showBigTitle:false,
         pageSize:20,
         pageIndex:1,
@@ -63,6 +80,13 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped rel="stylesheet/scss" lang="scss">
+
+  .mescroll{
+    position: fixed;
+    top: 44px;
+    bottom: 0;
+    height: auto;
+  }
 
   .icon {
 
