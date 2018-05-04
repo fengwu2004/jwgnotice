@@ -8,7 +8,7 @@
         <div class="history">历史</div><div class="rightarrow"></div>
       </div>
     </div>
-    <div id="mescroll" class="mescroll">
+    <div id="mescroll" class="mescroll" :style="{top:headerTop}">
       <div v-cloak v-if="msgList.length > 0">
         <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
       </div>
@@ -87,6 +87,17 @@
         pageIndex:1,
         msgList:[],
         isRead:false,
+      }
+    },
+    computed:{
+      headerTop() {
+
+        if (this.showHeader) {
+
+          return '2rem'
+        }
+
+        return '0'
       }
     }
   }
