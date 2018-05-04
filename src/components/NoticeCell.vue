@@ -48,15 +48,15 @@
 
   .noticecell {
 
-    border-bottom: 1px solid grey;
-    height: 8rem;
+    border-bottom: 1px solid #D9D9DD;
+    height: 7rem;
     position: relative;
   }
 
   .maincontent {
 
-    margin-top: 0.5rem;
-    height: 7rem;
+    margin-top: 1rem;
+    height: 5rem;
     display: flex;
     justify-content: space-between;
   }

@@ -2,7 +2,7 @@
   <div class="main">
     <div v-if="showHeader" class="header">
       <div class="left">
-        <div class="icon"></div><div style="font-weight: bolder">内部通知</div>
+        <div class="icon"></div><div style="font-weight: bolder;font-size: 1.5rem">内部通知</div>
       </div>
       <div class="right">
         <div class="history">历史</div><div class="rightarrow"></div>
@@ -94,7 +94,7 @@
 
         if (this.showHeader) {
 
-          return '2rem'
+          return '3rem'
         }
 
         return '0'
@@ -119,8 +119,8 @@
 
   .icon {
 
-    width: 0.8rem;
-    height: 0.8rem;
+    width: 1rem;
+    height: 1rem;
     background: url('../assets/message.png') no-repeat center/100%;
     margin-right: 0.5rem;
   }
@@ -129,8 +129,8 @@
 
     display: flex;
     justify-content: space-between;
-    height: 2rem;
-    border-bottom: 1px solid black;
+    height: 3rem;
+    border-bottom: 1px solid #D9D9DD;
   }
 
   .left, .right {
