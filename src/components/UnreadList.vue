@@ -43,8 +43,6 @@
 
       this.token = getQueryString('token')
 
-      console.log(this.userId, this.token)
-
       this.mescroll = new MeScroll('mescroll', {
 
         up: {
@@ -81,8 +79,6 @@
           pageIndex:pageIndex,
           userId:this.userId,
           token:this.token,
-          isAndroid:false,
-          isiOS:false,
         }
 
         queryMsgList(data)
