@@ -16,12 +16,19 @@
     computed:{
       content() {
 
-        if (this.item.msgContent.length > 50) {
+        let text = this.item.msgSubject
 
-          return this.item.msgContent.substring(0, 50) + '...'
+        if (this.item.summary) {
+
+          text += '---' + this.item.summary
         }
 
-        return this.item.msgContent
+        if (text > 50) {
+
+          return text.substring(0, 50) + '...'
+        }
+
+        return text
       },
       date() {
 
