@@ -27,25 +27,10 @@
   import { queryMsgList } from "@/api/message"
   import MeScroll from 'mescroll.js'
 
-  function getQueryString(name) {
-    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) {
-      return decodeURI(r[2]);
-    }
-    return null;
-  }
-
   export default {
     components: { NoticeCell },
     name: 'NoticeList',
     mounted() {
-
-      let userId = getQueryString('userId')
-
-      let token = getQueryString('token')
-
-      console.log(userId, token)
 
       this.mescroll = new MeScroll('mescroll', {
 

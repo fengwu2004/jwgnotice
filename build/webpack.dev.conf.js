@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
+var glob = require('glob')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -52,11 +53,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
-    }),
+    // new HtmlWebpackPlugin({
+    //   filename: 'index.html',
+    //   template: 'index.html',
+    //   inject: true
+    // }),
     // copy custom static assets
     new CopyWebpackPlugin([
       {
@@ -88,8 +89,46 @@ module.exports = new Promise((resolve, reject) => {
         ? utils.createNotifierCallback()
         : undefined
       }))
-
+  
+      setModules()
+      
       resolve(devWebpackConfig)
     }
   })
 })
+
+function getEntry(globPath) {
+  var entries = {},
+    basename, tmp, pathname;
+  
+  console.log('gogoogogogo')
+  glob.sync(globPath).forEach(function (entry) {
+    basename = path.basename(entry, path.extname(entry));
+    tmp = entry.split('/').splice(-3);
+    pathname = tmp.splice(0, 1) + '/' + basename; // 正确输出js和html的路径
+    entries[pathname] = entry;
+  });
+  console.log(entries);
+  return entries;
+}
+
+function setModules() {
+  
+  var pages = getEntry('./src/module/**/*.html');
+  
+  for (var pathname in pages) {
+    // 配置生成的html文件，定义路径等
+    var conf = {
+      filename: pathname + '.html',
+      template: pages[pathname], // 模板路径
+      chunks: [pathname, 'vendor', 'manifest'], // 每个html引用的js模块
+      inject: true              // js插入位置
+    };
+    
+    console.log('++++++++++++++++')
+    console.log(conf)
+    // 需要生成几个html文件，就配置几个HtmlWebpackPlugin对象
+    devWebpackConfig.plugins.push(new HtmlWebpackPlugin(conf));
+  }
+}
+

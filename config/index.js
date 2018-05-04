@@ -11,11 +11,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
+      '/module': {
         target: 'http://10.101.90.123:8012/', // 接口的域名,
         changeOrigin:true,
         pathRewrite: {
-          '^/api': ''
+          '^/module': ''
         }
       }
     },
