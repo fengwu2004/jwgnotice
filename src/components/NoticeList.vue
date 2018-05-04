@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div v-if="showBigTitle" class="bigtitle">
+    <div v-if="showHeader" class="header">
       <div class="left">
         <div class="icon"></div><div style="font-weight: bolder">内部通知</div>
       </div>
@@ -9,12 +9,19 @@
       </div>
     </div>
     <div id="mescroll" class="mescroll">
-      <notice-cell v-for="item in this.msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
+      <div v-cloak v-if="msgList.length > 0">
+        <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
+      </div>
+      <div v-else class="nodata">
+        <span class="simile"></span><div>亲，暂无最新通知哦</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+
+  import '@/components/mescroll.min.css'
 
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
@@ -23,10 +30,6 @@
   export default {
     components: { NoticeCell },
     name: 'NoticeList',
-    created() {
-
-      this.getList()
-    },
     mounted() {
 
       this.mescroll = new MeScroll('mescroll', {
@@ -39,7 +42,17 @@
     methods:{
       upCallback(page) {
 
-        console.log(page)
+        this.getList(page.num, page.size, currPageData => {
+
+          let value = currPageData
+
+          this.msgList = value
+
+          this.mescroll.endSuccess(value.length);
+        }, () => {
+
+          this.mescroll.endErr()
+        })
       },
       selectMessage(msg) {
 
@@ -47,28 +60,29 @@
 
         this.$router.push(route)
       },
-      getList() {
-
-        console.log('getList')
+      getList(pageIndex, pageSize, successCallback, errorCallback) {
 
         let data = {
 
-          token:"28816fb0c5d74a9fae0549fd78e46e0a",
-          userId:"061a96ebdf0247918aa684b9278053e3"
+          pageSize:pageSize,
+          pageIndex:pageIndex
         }
 
-        queryMsgList(data).then(response => {
+        queryMsgList(data)
+          .then(response => {
 
-          console.log(response)
-
-          this.msgList = response.data.msgList
+          successCallback && successCallback(response.data.msgList)
         })
+          .catch(res => {
+
+            errorCallback && errorCallback(res)
+          })
       },
     },
     data () {
       return {
         mescroll:null,
-        showBigTitle:false,
+        showHeader:true,
         pageSize:20,
         pageIndex:1,
         msgList:[],
@@ -81,9 +95,13 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped rel="stylesheet/scss" lang="scss">
 
+  [v-cloak] {
+    display: none;
+  }
+
   .mescroll{
     position: fixed;
-    top: 44px;
+    top: 0;
     bottom: 0;
     height: auto;
   }
@@ -96,7 +114,7 @@
     margin-right: 0.5rem;
   }
 
-  .bigtitle {
+  .header {
 
     display: flex;
     justify-content: space-between;
@@ -128,6 +146,24 @@
   .main {
 
     margin-left: 1rem;
+  }
+
+  .simile {
+
+    margin-right: 0.5rem;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background: url("/static/simile-icon.png") no-repeat center/100%;
+  }
+
+  .nodata {
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 </style>

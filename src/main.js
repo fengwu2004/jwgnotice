@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import './mock' // simulation data
+// import './mock' // simulation data
 
 Vue.config.productionTip = false
 
