@@ -15,15 +15,19 @@
 
   import '@/components/mescroll.min.css'
 
+  import { Loadmore } from 'mint-ui'
+
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
   import MeScroll from 'mescroll.js'
   import { getQueryString } from "@/utils/common"
 
   export default {
-    components: { NoticeCell },
+    components: { NoticeCell , Loadmore },
     name: 'TotalList',
     mounted() {
+
+      document.title = '所有内部通知'
 
       this.userId = getQueryString('userId')
 

@@ -23,4 +23,11 @@ export default {
   bottom: 0;
   position: absolute;
 }
+
+  div {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select:none;
+  }
 </style>

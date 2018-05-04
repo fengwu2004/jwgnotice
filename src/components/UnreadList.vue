@@ -1,13 +1,5 @@
 <template>
   <div class="main">
-    <div class="header">
-      <div class="left">
-        <div class="icon"></div><div style="font-weight: bolder;font-size: 1.5rem">内部通知</div>
-      </div>
-      <div class="right" @click="onHistoryClick">
-        <div class="history">历史</div><div class="rightarrow"></div>
-      </div>
-    </div>
     <div id="mescroll" class="mescroll">
       <div v-cloak v-if="msgList.length > 0">
         <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
@@ -33,18 +25,17 @@
     name: 'UnreadList',
     mounted() {
 
+      document.title = '未读列表'
+
       var u = navigator.userAgent
 
       this.isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
-
-      this.isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
 
       this.userId = getQueryString('userId')
 
       this.token = getQueryString('token')
 
       this.mescroll = new MeScroll('mescroll', {
-
         up: {
           callback:this.upCallback,
         }
@@ -67,6 +58,8 @@
       },
       onHistoryClick() {
 
+        console.log('是否是安卓', this.isAndroid)
+
         if (!this.isAndroid) {
 
           if (window.webkit) {
@@ -83,6 +76,8 @@
         }
       },
       selectMessage(msg) {
+
+        console.log('是否是安卓', this.isAndroid)
 
         if (!this.isAndroid) {
 
@@ -146,6 +141,7 @@
     top: 3rem;
     bottom: 0;
     height: auto;
+    width: 100%;
   }
 
   .icon {
@@ -158,6 +154,8 @@
 
   .header {
 
+    position: fixed;
+    width: calc(100% - 1rem);
     display: flex;
     justify-content: space-between;
     height: 3rem;
@@ -187,7 +185,7 @@
 
   .main {
 
-    margin-left: 1rem;
+    /*margin-left: 1rem;*/
   }
 
   .simile {

@@ -15,6 +15,8 @@
     name:'MessageDetail',
     created() {
 
+      document.title = '通知详情'
+
       let msgId = getQueryString('msgId')
 
       let userId = getQueryString('userId')
