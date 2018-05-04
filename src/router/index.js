@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import NoticeList from '@/components/NoticeList'
+import UnreadList from '@/components/UnreadList'
+import TotalList from '@/components/TotalList'
 import MessageDetail from '@/components/MessageDetail'
 
 Vue.use(Router)
@@ -8,9 +9,14 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/list',
-      name: 'noticelist',
-      component: NoticeList
+      path: '/unreadlist',
+      name: 'unreadlist',
+      component: UnreadList
+    },
+    {
+      path: '/totallist',
+      name: 'totallist',
+      component: TotalList
     },
     {
       path: '/detail',

@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div v-if="showHeader" class="header">
+    <div class="header">
       <div class="left">
         <div class="icon"></div><div style="font-weight: bolder;font-size: 1.5rem">内部通知</div>
       </div>
@@ -8,7 +8,7 @@
         <div class="history">历史</div><div class="rightarrow"></div>
       </div>
     </div>
-    <div id="mescroll" class="mescroll" :style="{top:headerTop}">
+    <div id="mescroll" class="mescroll">
       <div v-cloak v-if="msgList.length > 0">
         <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
       </div>
@@ -38,7 +38,7 @@
 
   export default {
     components: { NoticeCell },
-    name: 'NoticeList',
+    name: 'UnreadList',
     mounted() {
 
       let userId = getQueryString('userId')
@@ -78,7 +78,7 @@
       getList(pageIndex, pageSize, successCallback, errorCallback) {
 
         let data = {
-
+          isRead:false,
           pageSize:pageSize,
           pageIndex:pageIndex
         }
@@ -97,24 +97,11 @@
     data () {
       return {
         mescroll:null,
-        showHeader:true,
         pageSize:20,
         pageIndex:1,
         msgList:[],
-        isRead:false,
       }
     },
-    computed:{
-      headerTop() {
-
-        if (this.showHeader) {
-
-          return '3rem'
-        }
-
-        return '0'
-      }
-    }
   }
 </script>
 
@@ -127,7 +114,7 @@
 
   .mescroll{
     position: fixed;
-    top: 0;
+    top: 3rem;
     bottom: 0;
     height: auto;
   }
