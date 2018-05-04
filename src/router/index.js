@@ -19,7 +19,7 @@ export default new Router({
       component: TotalList
     },
     {
-      path: '/detail',
+      path: '/messagedetail',
       name: 'messagedetail',
       component: MessageDetail
     }

@@ -29,6 +29,8 @@
 
       this.token = routeparams.token ? routeparams.token : token
 
+      console.log('aaa')
+
       let data = {
         msgId:this.msgId,
         userId:this.userId,

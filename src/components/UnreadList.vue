@@ -4,7 +4,7 @@
       <div class="left">
         <div class="icon"></div><div style="font-weight: bolder;font-size: 1.5rem">内部通知</div>
       </div>
-      <div class="right">
+      <div class="right" @click="onHistoryClick">
         <div class="history">历史</div><div class="rightarrow"></div>
       </div>
     </div>
@@ -65,11 +65,39 @@
           this.mescroll.endErr()
         })
       },
+      onHistoryClick() {
+
+        if (!this.isAndroid) {
+
+          if (window.webkit) {
+
+            window.webkit.messageHandlers.onHistoryClick.postMessage()
+          }
+        }
+        else {
+
+          if (window.android) {
+
+            window.android.onHistoryClick()
+          }
+        }
+      },
       selectMessage(msg) {
 
-        let route = {name:'messagedetail', params: { msgId:msg.msgId }}
+        if (!this.isAndroid) {
 
-        this.$router.push(route)
+          if (window.webkit) {
+
+            window.webkit.messageHandlers.onMessageClick.postMessage({msgId:msg.msgId})
+          }
+        }
+        else {
+
+          if (window.android) {
+
+            window.android.onMessageClick(msg.msgId)
+          }
+        }
       },
       getList(pageIndex, pageSize, successCallback, errorCallback) {
 
@@ -99,7 +127,8 @@
         pageIndex:1,
         msgList:[],
         userId:'',
-        token:''
+        token:'',
+        isAndroid:''
       }
     },
   }

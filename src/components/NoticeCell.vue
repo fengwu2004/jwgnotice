@@ -2,7 +2,7 @@
   <div @click="handleClick" class="noticecell">
     <div class="maincontent">
       <span class="text">{{content}}</span>
-      <img class="icon" width="80" height="80" v-if="icon" :src="icon"/>
+      <img class="icon" width="80" height="80" v-show="icon" :src="icon"/>
     </div>
     <div class="date">{{date}}</div>
   </div>
