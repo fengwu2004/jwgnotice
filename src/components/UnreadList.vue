@@ -33,6 +33,12 @@
     name: 'UnreadList',
     mounted() {
 
+      var u = navigator.userAgent
+
+      this.isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+
+      this.isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+
       this.userId = getQueryString('userId')
 
       this.token = getQueryString('token')
@@ -74,7 +80,9 @@
           pageSize:pageSize,
           pageIndex:pageIndex,
           userId:this.userId,
-          token:this.token
+          token:this.token,
+          isAndroid:false,
+          isiOS:false,
         }
 
         queryMsgList(data)
