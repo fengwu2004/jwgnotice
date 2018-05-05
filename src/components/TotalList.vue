@@ -19,7 +19,7 @@
         </div>
       </mt-loadmore>
     </div>
-    <div v-else class="nodata">
+    <div v-if="nodata" class="nodata">
       <span class="simile"></span><div>亲，暂无任何消息</div>
     </div>
   </div>
@@ -82,6 +82,11 @@
 
           this.allLoaded = false
 
+          if (this.msgList.length == 0) {
+
+            this.nodata = true
+          }
+
           this.$refs.loadmore.onTopLoaded();
         })
       },
@@ -118,6 +123,7 @@
     },
     data () {
       return {
+        nodata:false,
         loading:false,
         pageSize:20,
         pageIndex:1,

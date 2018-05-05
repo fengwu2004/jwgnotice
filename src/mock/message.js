@@ -4,7 +4,7 @@ let datastr = "{\"resultCode\":\"0\",\"message\":\"\",\"obj\":null,\"msgList\":[
 
 let data = JSON.parse(datastr)
 
-let count = 22
+let count = 0
 let messagelist = []
 
 let img1 = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525541856936&di=36c24ca840b13a965f1393b9e2392342&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2Fd009b3de9c82d158e8c116a38a0a19d8bc3e4264.jpg'
