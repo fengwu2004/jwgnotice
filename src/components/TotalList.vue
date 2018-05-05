@@ -1,8 +1,8 @@
 <template>
   <div class="main">
     <div v-cloak v-if="msgList.length > 0">
-      <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange" :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore">
-        <div>
+      <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange" ref="loadmore">
+        <div class="list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false" infinite-scroll-distance="50">
           <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @top-status-change="handleTopChange" @select="selectMessage(item)"></notice-cell>
         </div>
         <div slot="top" class="mint-loadmore-top">
@@ -11,11 +11,11 @@
             <mt-spinner type="snake"></mt-spinner>
           </span>
         </div>
-        <div slot="bottom" class="mint-loadmore-bottom">
-          <span v-show="bottomStatus !== 'loading'" :class="{ 'is-rotate': bottomStatus === 'drop' }">↑</span>
-          <span v-show="bottomStatus === 'loading'">
-            <mt-spinner type="snake"></mt-spinner>
-          </span>
+        <div v-show="loading" class="page-infinite-loading">
+          <div>
+            <mt-spinner type="fading-circle"></mt-spinner>
+          </div>
+          <span>加载中...</span>
         </div>
       </mt-loadmore>
     </div>
@@ -43,48 +43,55 @@
       this.loadTop()
     },
     methods:{
+      loadMore() {
+
+        if (this.allLoaded) {
+
+          this.loading = false
+
+          return
+        }
+
+        this.loading = true
+
+        this.pageIndex += 1
+
+        this.getList(this.pageIndex, this.pageSize, res => {
+
+          this.msgList = this.msgList.concat(res.msgList)
+
+          if (res.msgList.length < this.pageSize) {
+
+            this.allLoaded = true
+          }
+
+          this.pageIndex = res.pageIndex
+
+          this.loading = false
+        })
+      },
       loadTop() {
 
-        this.getList(this.pageIndex, this.pageSize, response => {
+        this.pageIndex = 1
 
-          this.msgList = response
+        this.getList(this.pageIndex, this.pageSize, res => {
+
+          this.msgList = res.msgList
+
+          this.pageIndex = res.pageIndex
+
+          this.allLoaded = false
 
           this.$refs.loadmore.onTopLoaded();
         })
       },
-      loadBottom() {
-
-        this.getList(this.pageIndex + 1, this.pageSize, response => {
-
-          this.msgList = response
-
-          this.$refs.loadmore.onBottomLoaded();
-        })
-      },
       handleTopChange(status) {
-
-        this.moveTranslate = 1;
 
         this.topStatus = status;
       },
-      handleBottomChange(status) {
-
-        this.bottomStatus = status;
-      },
-      upCallback(page) {
-
-        this.getList(page.num, page.size, currPageData => {
-
-          let value = currPageData
-
-          this.msgList = value
-
-        }, () => {
-
-
-        })
-      },
       selectMessage(msg) {
+
+        return
 
         let route = {name:'messagedetail', params: { msgId:msg.msgId }}
 
@@ -95,15 +102,13 @@
         let data = {
 
           pageSize:pageSize,
-          pageIndex:pageIndex,
-          userId:this.userId,
-          token:this.token
+          pageIndex:pageIndex
         }
 
         queryMsgList(data)
           .then(response => {
 
-          successCallback && successCallback(response.data.msgList)
+          successCallback && successCallback(response.data)
         })
           .catch(res => {
 
@@ -113,14 +118,12 @@
     },
     data () {
       return {
-        mescroll:null,
+        loading:false,
         pageSize:20,
         pageIndex:1,
         msgList:[],
         allLoaded:false,
         topStatus: '',
-        bottomStatus: '',
-        moveTranslate: 0
       }
     },
   }
@@ -128,50 +131,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped rel="stylesheet/scss" lang="scss">
-
-  .icon {
-
-    width: 1rem;
-    height: 1rem;
-    background: url('../assets/message.png') no-repeat center/100%;
-    margin-right: 0.5rem;
-  }
-
-  .specialspan {
-
-    display: inline-block;
-    transition: .2s linear;
-    vertical-align: middle;
-  }
-
-  .header {
-
-    display: flex;
-    justify-content: space-between;
-    height: 3rem;
-    border-bottom: 1px solid #D9D9DD;
-  }
-
-  .left, .right {
-
-    display: flex;
-    align-items: center;
-  }
-
-  .history {
-
-    font-size: 0.8rem;
-    color: #C7C7CB;
-  }
-
-  .rightarrow {
-
-    width: 0.4rem;
-    height: 0.6rem;
-    background: url('../assets/rightarrow.png') no-repeat center/100%;
-    margin-left: 0.5rem;
-    margin-right: 1rem;
-  }
 
   .simile {
 
@@ -205,6 +164,18 @@
       .is-rotate {
         transform: rotate(180deg);
       }
+    }
+  }
+
+  .page-infinite-loading {
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+
+    div {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
     }
   }
 
