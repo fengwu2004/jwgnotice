@@ -23,7 +23,7 @@
       <span class="simile"></span><div>亲，暂无任何消息</div>
     </div>
     <div v-if="networkerror" class="nodata">
-      <span class="simile"></span><div>亲，暂无任何消息</div>
+      <span class="simile"></span><div>亲，网络异常</div>
     </div>
   </div>
 </template>
@@ -76,7 +76,9 @@
 
         this.pageIndex = 1
 
-        this.getList(this.pageIndex, this.pageSize, res => {
+        this.getList(this.pageIndex, this.pageSize).then(res => {
+
+          this.networkerror = false
 
           this.msgList = res.msgList
 
@@ -84,12 +86,20 @@
 
           this.allLoaded = false
 
+          if (res.msgList.length < this.pageSize) {
+
+            this.allLoaded = true
+          }
+
           if (this.msgList.length == 0) {
 
             this.nodata = true
           }
 
           this.$refs.loadmore.onTopLoaded();
+        }).catch(() => {
+
+          this.networkerror = true
         })
       },
       handleTopChange(status) {
@@ -104,7 +114,7 @@
 
         this.$router.push(route)
       },
-      getList(pageIndex, pageSize, successCallback, errorCallback) {
+      getList(pageIndex, pageSize) {
 
         let data = {
 
@@ -112,15 +122,18 @@
           pageIndex:pageIndex
         }
 
-        queryMsgList(data)
-          .then(response => {
+        return new Promise((resolve, reject) => {
 
-          successCallback && successCallback(response.data)
+          queryMsgList(data)
+            .then(response => {
+
+              resolve(response.data)
+            })
+            .catch(res => {
+
+              reject(res)
+            })
         })
-          .catch(res => {
-
-            errorCallback && errorCallback(res)
-          })
       },
     },
     data () {
