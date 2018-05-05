@@ -22,6 +22,9 @@
     <div v-if="nodata" class="nodata">
       <span class="simile"></span><div>亲，暂无任何消息</div>
     </div>
+    <div v-if="networkerror" class="nodata">
+      <span class="simile"></span><div>亲，暂无任何消息</div>
+    </div>
   </div>
 </template>
 
@@ -33,7 +36,6 @@
 
   export default {
     components: { NoticeCell },
-    name: 'TotalList',
     mounted() {
 
       this.userId = getQueryString('userId')
@@ -130,6 +132,7 @@
         msgList:[],
         allLoaded:false,
         topStatus: '',
+        networkerror:false
       }
     },
   }
@@ -137,6 +140,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped rel="stylesheet/scss" lang="scss">
+
+  .main {
+
+    width: 100%;
+    height: 100%;
+  }
 
   .simile {
 

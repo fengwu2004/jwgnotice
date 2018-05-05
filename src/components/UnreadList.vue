@@ -1,114 +1,119 @@
 <template>
   <div class="main">
-    <div id="mescroll" class="mescroll">
-      <div v-cloak v-if="msgList.length > 0">
-        <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
-      </div>
-      <div v-else class="nodata">
-        <span class="simile"></span><div>亲，暂无最新通知哦</div>
-      </div>
+    <div v-cloak v-if="msgList.length > 0">
+      <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange" ref="loadmore">
+        <div class="list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false" infinite-scroll-distance="50">
+          <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @top-status-change="handleTopChange" @select="selectMessage(item)"></notice-cell>
+        </div>
+        <div slot="top" class="mint-loadmore-top">
+          <span v-show="topStatus !== 'loading'" :class="{ 'is-rotate': topStatus === 'drop' }">↓</span>
+          <span v-show="topStatus === 'loading'">
+            <mt-spinner type="snake"></mt-spinner>
+          </span>
+        </div>
+        <div v-show="loading" class="page-infinite-loading">
+          <div>
+            <mt-spinner type="fading-circle"></mt-spinner>
+          </div>
+          <span>加载中...</span>
+        </div>
+      </mt-loadmore>
+    </div>
+    <div v-if="nodata" class="nodata">
+      <span class="simile"></span><div>亲，暂无最新通知哦</div>
     </div>
   </div>
 </template>
 
 <script>
 
-  import '@/components/mescroll.min.css'
-
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
-  import MeScroll from 'mescroll.js'
   import { getQueryString } from "@/utils/common"
 
   export default {
     components: { NoticeCell },
-    name: 'UnreadList',
     mounted() {
-
-      document.title = '未读列表'
-
-      var u = navigator.userAgent
-
-      this.isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
 
       this.userId = getQueryString('userId')
 
       this.token = getQueryString('token')
 
-      this.mescroll = new MeScroll('mescroll', {
-        up: {
-          callback:this.upCallback,
-        }
-      })
+      this.loadTop()
     },
     methods:{
-      upCallback(page) {
+      loadMore() {
 
-        this.getList(page.num, page.size, currPageData => {
+        if (this.allLoaded) {
 
-          let value = currPageData
+          this.loading = false
 
-          this.msgList = value
+          return
+        }
 
-          this.mescroll.endSuccess(value.length);
-        }, () => {
+        this.loading = true
 
-          this.mescroll.endErr()
+        this.pageIndex += 1
+
+        this.getList(this.pageIndex, this.pageSize, res => {
+
+          this.msgList = this.msgList.concat(res.msgList)
+
+          if (res.msgList.length < this.pageSize) {
+
+            this.allLoaded = true
+          }
+
+          this.pageIndex = res.pageIndex
+
+          this.loading = false
         })
       },
-      onHistoryClick() {
+      loadTop() {
 
-        console.log('是否是安卓', this.isAndroid)
+        this.pageIndex = 1
 
-        if (!this.isAndroid) {
+        this.getList(this.pageIndex, this.pageSize, res => {
 
-          if (window.webkit) {
+          this.msgList = res.msgList
 
-            window.webkit.messageHandlers.onHistoryClick.postMessage()
+          this.pageIndex = res.pageIndex
+
+          this.allLoaded = false
+
+          if (this.msgList.length == 0) {
+
+            this.nodata = true
           }
-        }
-        else {
 
-          if (window.android) {
+          this.$refs.loadmore.onTopLoaded();
+        })
+      },
+      handleTopChange(status) {
 
-            window.android.onHistoryClick()
-          }
-        }
+        this.topStatus = status;
       },
       selectMessage(msg) {
 
-        console.log('是否是安卓', this.isAndroid)
+        return
 
-        if (!this.isAndroid) {
+        let route = {name:'messagedetail', params: { msgId:msg.msgId }}
 
-          if (window.webkit) {
-
-            window.webkit.messageHandlers.onMessageClick.postMessage({msgId:msg.msgId})
-          }
-        }
-        else {
-
-          if (window.android) {
-
-            window.android.onMessageClick(msg.msgId)
-          }
-        }
+        this.$router.push(route)
       },
       getList(pageIndex, pageSize, successCallback, errorCallback) {
 
         let data = {
-          isRead:false,
+
           pageSize:pageSize,
-          pageIndex:pageIndex,
-          userId:this.userId,
-          token:this.token,
+          pageIndex:pageIndex
         }
 
         queryMsgList(data)
           .then(response => {
 
-          successCallback && successCallback(response.data.msgList)
-        })
+            successCallback && successCallback(response.data)
+          })
           .catch(res => {
 
             errorCallback && errorCallback(res)
@@ -117,13 +122,13 @@
     },
     data () {
       return {
-        mescroll:null,
+        nodata:false,
+        loading:false,
         pageSize:20,
         pageIndex:1,
         msgList:[],
-        userId:'',
-        token:'',
-        isAndroid:''
+        allLoaded:false,
+        topStatus: '',
       }
     },
   }
@@ -132,60 +137,10 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped rel="stylesheet/scss" lang="scss">
 
-  [v-cloak] {
-    display: none;
-  }
-
-  .mescroll{
-    position: fixed;
-    top: 3rem;
-    bottom: 0;
-    height: auto;
-    width: 100%;
-  }
-
-  .icon {
-
-    width: 1rem;
-    height: 1rem;
-    background: url('../assets/message.png') no-repeat center/100%;
-    margin-right: 0.5rem;
-  }
-
-  .header {
-
-    position: fixed;
-    width: calc(100% - 1rem);
-    display: flex;
-    justify-content: space-between;
-    height: 3rem;
-    border-bottom: 1px solid #D9D9DD;
-  }
-
-  .left, .right {
-
-    display: flex;
-    align-items: center;
-  }
-
-  .history {
-
-    font-size: 0.8rem;
-    color: #C7C7CB;
-  }
-
-  .rightarrow {
-
-    width: 0.4rem;
-    height: 0.6rem;
-    background: url('../assets/rightarrow.png') no-repeat center/100%;
-    margin-left: 0.5rem;
-    margin-right: 1rem;
-  }
-
   .main {
 
-    /*margin-left: 1rem;*/
+    width: 100%;
+    height: 100%;
   }
 
   .simile {
@@ -204,6 +159,35 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .mint-spinner {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .mint-loadmore-top {
+    span {
+      display: inline-block;
+      transition: .2s linear;
+      vertical-align: middle;
+
+      .is-rotate {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .page-infinite-loading {
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+
+    div {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
   }
 
 </style>
