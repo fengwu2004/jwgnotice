@@ -3,26 +3,6 @@ let datastr = "{\"resultCode\":\"0\",\"message\":\"\",\"obj\":null,\"msgList\":[
 
 let data = JSON.parse(datastr)
 
-// data.msgList = [
-//   {
-//     msgContent:'随着社会的进步随着社会的进步随着社会的进步随着社会的进步随着社会的进步随着社会的进步',
-//     imageUrl:'/static/timg.jpeg',
-//     createTime:'2018-04-11 19:43',
-//     id:'0'
-//   },
-//   {
-//     msgContent:'随着社会的进步随着社会的进步随着社会的进步随着社会的进步随着社会的进步随着社会的进步',
-//     createTime:'2018-04-11 19:43',
-//     id:'1'
-//   },
-//   {
-//     msgContent:'随着社会的进步随着社会的进步随着社会的进步随着社会的进步随着社会的进步随着社会的进步',
-//     imageUrl:'http://cdn.alloyteam.com/assets/img/qq-71f7f2.gif',
-//     createTime:'2018-04-11 19:43',
-//     id:'2'
-//   },
-// ]
-
 let msgdetialstr = "{\"resultCode\":\"0\",\"message\":\"\",\"obj\":null,\"msg\":{\"msgId\":\"04854adf94084910bf0992ab41670376\",\"userId\":\"27ade88dd2e24c269fbf07005bb21337\",\"areaId\":null,\"pushType\":\"P2P\",\"msgMainType\":\"NOTIFY\",\"msgSubType\":\"VEHICLE_AUTHEN_PASS\",\"pushChannel\":\"APP\",\"msgSubject\":\"车辆认证成功\",\"msgContent\":\"{\\\"content\\\":\\\"您的粤-C755KG认证成功，感谢使用捷停车APP\\\"}\",\"cardId\":null,\"url\":null,\"createTime\":1511949705000,\"planPushTime\":null,\"actualPushTime\":null,\"pushStatus\":\"UNPUSH\",\"source\":null,\"summary\":null,\"imageUrl\":null,\"isRead\":null,\"areaIds\":null},\"right\":true}"
 
 export default {

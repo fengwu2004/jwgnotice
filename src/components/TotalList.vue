@@ -1,46 +1,76 @@
 <template>
   <div class="main">
-    <div id="mescroll" class="mescroll">
-      <div v-cloak v-if="msgList.length > 0">
-        <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @select="selectMessage(item)"></notice-cell>
-      </div>
-      <div v-else class="nodata">
-        <span class="simile"></span><div>亲，暂无任何消息</div>
-      </div>
+    <div v-cloak v-if="msgList.length > 0">
+      <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange" :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore">
+        <div>
+          <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @top-status-change="handleTopChange" @select="selectMessage(item)"></notice-cell>
+        </div>
+        <div slot="top" class="mint-loadmore-top">
+          <span v-show="topStatus !== 'loading'" :class="{ 'is-rotate': topStatus === 'drop' }">↓</span>
+          <span v-show="topStatus === 'loading'">
+            <mt-spinner type="snake"></mt-spinner>
+          </span>
+        </div>
+        <div slot="bottom" class="mint-loadmore-bottom">
+          <span v-show="bottomStatus !== 'loading'" :class="{ 'is-rotate': bottomStatus === 'drop' }">↑</span>
+          <span v-show="bottomStatus === 'loading'">
+            <mt-spinner type="snake"></mt-spinner>
+          </span>
+        </div>
+      </mt-loadmore>
+    </div>
+    <div v-else class="nodata">
+      <span class="simile"></span><div>亲，暂无任何消息</div>
     </div>
   </div>
 </template>
 
 <script>
 
-  import '@/components/mescroll.min.css'
-
-  import { Loadmore } from 'mint-ui'
-
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
-  import MeScroll from 'mescroll.js'
   import { getQueryString } from "@/utils/common"
 
   export default {
-    components: { NoticeCell , Loadmore },
+    components: { NoticeCell },
     name: 'TotalList',
     mounted() {
-
-      document.title = '所有内部通知'
 
       this.userId = getQueryString('userId')
 
       this.token = getQueryString('token')
 
-      this.mescroll = new MeScroll('mescroll', {
-
-        up: {
-          callback:this.upCallback,
-        }
-      })
+      this.loadTop()
     },
     methods:{
+      loadTop() {
+
+        this.getList(this.pageIndex, this.pageSize, response => {
+
+          this.msgList = response
+
+          this.$refs.loadmore.onTopLoaded();
+        })
+      },
+      loadBottom() {
+
+        this.getList(this.pageIndex + 1, this.pageSize, response => {
+
+          this.msgList = response
+
+          this.$refs.loadmore.onBottomLoaded();
+        })
+      },
+      handleTopChange(status) {
+
+        this.moveTranslate = 1;
+
+        this.topStatus = status;
+      },
+      handleBottomChange(status) {
+
+        this.bottomStatus = status;
+      },
       upCallback(page) {
 
         this.getList(page.num, page.size, currPageData => {
@@ -49,10 +79,9 @@
 
           this.msgList = value
 
-          this.mescroll.endSuccess(value.length);
         }, () => {
 
-          this.mescroll.endErr()
+
         })
       },
       selectMessage(msg) {
@@ -88,6 +117,10 @@
         pageSize:20,
         pageIndex:1,
         msgList:[],
+        allLoaded:false,
+        topStatus: '',
+        bottomStatus: '',
+        moveTranslate: 0
       }
     },
   }
@@ -96,25 +129,19 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped rel="stylesheet/scss" lang="scss">
 
-  [v-cloak] {
-    display: none;
-  }
-
-  .mescroll{
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 1rem;
-    width: calc(100% - 1rem);
-    height: auto;
-  }
-
   .icon {
 
     width: 1rem;
     height: 1rem;
     background: url('../assets/message.png') no-repeat center/100%;
     margin-right: 0.5rem;
+  }
+
+  .specialspan {
+
+    display: inline-block;
+    transition: .2s linear;
+    vertical-align: middle;
   }
 
   .header {
@@ -146,11 +173,6 @@
     margin-right: 1rem;
   }
 
-  .main {
-
-    margin-left: 1rem;
-  }
-
   .simile {
 
     margin-right: 0.5rem;
@@ -167,6 +189,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .mint-spinner {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .mint-loadmore-top {
+    span {
+      display: inline-block;
+      transition: .2s linear;
+      vertical-align: middle;
+
+      .is-rotate {
+        transform: rotate(180deg);
+      }
+    }
   }
 
 </style>
