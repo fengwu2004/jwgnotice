@@ -41,6 +41,8 @@
 
       document.title = '内部通知未读'
 
+      let u = navigator.userAgent
+
       this.isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
 
       this.userId = getQueryString('userId')

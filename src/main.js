@@ -6,11 +6,12 @@ import router from './router'
 import './mock' // simulation data
 import 'mint-ui/lib/style.css'
 
-import { Loadmore, InfiniteScroll } from 'mint-ui';
+import { Loadmore, InfiniteScroll, Spinner } from 'mint-ui';
 
 Vue.config.productionTip = false
 
 Vue.component(Loadmore.name, Loadmore);
+Vue.component(Spinner.name, Spinner);
 Vue.use(InfiniteScroll);
 
 

@@ -41,11 +41,18 @@
 
       document.title = '所有内部通知'
 
+      let u = navigator.userAgent
+
       this.isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
 
       this.userId = getQueryString('userId')
 
       this.token = getQueryString('token')
+
+      Indicator.open({
+        text: '加载中...',
+        spinnerType: 'fading-circle'
+      });
 
       this.loadTop()
     },
@@ -88,11 +95,6 @@
         this.nodata = false
 
         this.pageIndex = 1
-
-        Indicator.open({
-          text: '加载中...',
-          spinnerType: 'fading-circle'
-        });
 
         this.getList(this.pageIndex, this.pageSize).then(res => {
 
