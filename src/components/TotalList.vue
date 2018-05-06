@@ -20,10 +20,10 @@
       </mt-loadmore>
     </div>
     <div v-if="nodata" class="nodata">
-      <span class="simile"></span><div>亲，暂无任何消息</div>
+      <div class="simile"></div><div>亲，暂无任何消息</div>
     </div>
     <div v-if="networkerror" class="nodata">
-      <span class="simile"></span><div>亲，网络异常</div>
+      <div class="simile"></div><div>亲，网络异常</div>
     </div>
   </div>
 </template>
@@ -177,11 +177,16 @@
 
   .simile {
 
-    margin-right: 0.5rem;
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    background: url("/static/simile-icon.png") no-repeat center/100%;
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 2rem;
+    background: url("../assets/simile-icon.png") no-repeat center/100%;
+  }
+
+  .networkerror {
+
+    background: url("../assets/networkerror.png") no-repeat center/100%;
   }
 
   .nodata {
@@ -189,6 +194,7 @@
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }

@@ -1,8 +1,8 @@
 <template>
   <div class="main">
-    <div v-cloak v-if="msgList.length > 0">
+    <div v-cloak v-if="msgList.length > 0 && !networkerror">
       <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange" ref="loadmore">
-        <div class="list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false" infinite-scroll-distance="50">
+        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false" infinite-scroll-distance="50">
           <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @top-status-change="handleTopChange" @select="selectMessage(item)"></notice-cell>
         </div>
         <div slot="top" class="mint-loadmore-top">
@@ -20,7 +20,10 @@
       </mt-loadmore>
     </div>
     <div v-if="nodata" class="nodata">
-      <span class="simile"></span><div>亲，暂无最新通知哦</div>
+      <div class="simile"></div><div>亲，暂无任何消息</div>
+    </div>
+    <div v-if="networkerror" class="nodata">
+      <div class="simile"></div><div>亲，网络异常</div>
     </div>
   </div>
 </template>
@@ -39,7 +42,10 @@
 
       this.token = getQueryString('token')
 
-      this.loadTop()
+      setTimeout(() => {
+
+        this.loadTop()
+      },0)
     },
     methods:{
       loadMore() {
@@ -55,7 +61,7 @@
 
         this.pageIndex += 1
 
-        this.getList(this.pageIndex, this.pageSize, res => {
+        this.getList(this.pageIndex, this.pageSize).then(res => {
 
           this.msgList = this.msgList.concat(res.msgList)
 
@@ -67,13 +73,19 @@
           this.pageIndex = res.pageIndex
 
           this.loading = false
+
+        }).catch(() => {
+
+          this.networkerror = true
         })
       },
       loadTop() {
 
         this.pageIndex = 1
 
-        this.getList(this.pageIndex, this.pageSize, res => {
+        this.getList(this.pageIndex, this.pageSize).then(res => {
+
+          this.networkerror = false
 
           this.msgList = res.msgList
 
@@ -81,12 +93,28 @@
 
           this.allLoaded = false
 
+          if (res.msgList.length < this.pageSize) {
+
+            this.allLoaded = true
+          }
+
           if (this.msgList.length == 0) {
 
             this.nodata = true
           }
 
-          this.$refs.loadmore.onTopLoaded();
+          console.log(this)
+
+          if (this.$refs.loadmore) {
+
+            this.$refs.loadmore.onTopLoaded();
+          }
+
+        }).catch(res => {
+
+          console.log(res)
+
+          this.networkerror = true
         })
       },
       handleTopChange(status) {
@@ -101,7 +129,7 @@
 
         this.$router.push(route)
       },
-      getList(pageIndex, pageSize, successCallback, errorCallback) {
+      getList(pageIndex, pageSize) {
 
         let data = {
 
@@ -109,15 +137,18 @@
           pageIndex:pageIndex
         }
 
-        queryMsgList(data)
-          .then(response => {
+        return new Promise((resolve, reject) => {
 
-            successCallback && successCallback(response.data)
-          })
-          .catch(res => {
+          queryMsgList(data)
+            .then(response => {
 
-            errorCallback && errorCallback(res)
-          })
+              resolve(response.data)
+            })
+            .catch(res => {
+
+              reject(res)
+            })
+        })
       },
     },
     data () {
@@ -129,6 +160,7 @@
         msgList:[],
         allLoaded:false,
         topStatus: '',
+        networkerror:false
       }
     },
   }
@@ -145,11 +177,16 @@
 
   .simile {
 
-    margin-right: 0.5rem;
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    background: url("/static/simile-icon.png") no-repeat center/100%;
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 2rem;
+    background: url("../assets/simile-icon.png") no-repeat center/100%;
+  }
+
+  .networkerror {
+
+    background: url("../assets/networkerror.png") no-repeat center/100%;
   }
 
   .nodata {
@@ -157,6 +194,7 @@
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
