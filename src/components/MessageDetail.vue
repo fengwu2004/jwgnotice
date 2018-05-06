@@ -17,21 +17,11 @@
 
       document.title = '通知详情'
 
-      let msgId = getQueryString('msgId')
+      this.msgId = getQueryString('msgId')
 
-      let userId = getQueryString('userId')
+      this.userId = getQueryString('userId')
 
-      let token = getQueryString('token')
-
-      let routeparams = this.$route.params
-
-      this.msgId = routeparams.msgId ? routeparams.msgId : msgId
-
-      this.userId = routeparams.userId ? routeparams.msgId : userId
-
-      this.token = routeparams.token ? routeparams.token : token
-
-      console.log('aaa')
+      this.token = getQueryString('token')
 
       let data = {
         msgId:this.msgId,

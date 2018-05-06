@@ -19,7 +19,7 @@
         </div>
       </mt-loadmore>
     </div>
-    <div v-if="nodata" class="nodata">
+    <div v-if="nodata" class="nodata" @click="loadTop">
       <div class="simile"></div><div>亲，暂无任何消息</div>
     </div>
     <div v-if="networkerror" class="nodata" @click="loadTop">
@@ -38,6 +38,8 @@
   export default {
     components: { NoticeCell },
     mounted() {
+
+      document.title = '所有内部通知'
 
       this.userId = getQueryString('userId')
 
@@ -80,6 +82,8 @@
       loadTop() {
 
         this.networkerror = false
+
+        this.nodata = false
 
         this.pageIndex = 1
 
