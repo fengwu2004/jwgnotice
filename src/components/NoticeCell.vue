@@ -70,7 +70,7 @@
 
   .maincontent {
 
-    height: 5rem;
+    height: 80px;
     padding: 1rem;
     display: flex;
     justify-content: space-between;
