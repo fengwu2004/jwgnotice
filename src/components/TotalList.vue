@@ -22,14 +22,15 @@
     <div v-if="nodata" class="nodata">
       <div class="simile"></div><div>亲，暂无任何消息</div>
     </div>
-    <div v-if="networkerror" class="nodata">
-      <div class="simile"></div><div>亲，网络异常</div>
+    <div v-if="networkerror" class="nodata" @click="loadTop">
+      <div class="simile"></div><div>网络开了小差，请点击重试</div>
     </div>
   </div>
 </template>
 
 <script>
 
+  import { Indicator } from 'mint-ui';
   import NoticeCell from '@/components/NoticeCell'
   import { queryMsgList } from "@/api/message"
   import { getQueryString } from "@/utils/common"
@@ -42,10 +43,7 @@
 
       this.token = getQueryString('token')
 
-      setTimeout(() => {
-
-        this.loadTop()
-      },0)
+      this.loadTop()
     },
     methods:{
       loadMore() {
@@ -81,9 +79,18 @@
       },
       loadTop() {
 
+        this.networkerror = false
+
         this.pageIndex = 1
 
+        Indicator.open({
+          text: '加载中...',
+          spinnerType: 'fading-circle'
+        });
+
         this.getList(this.pageIndex, this.pageSize).then(res => {
+
+          Indicator.close()
 
           this.networkerror = false
 
@@ -113,6 +120,8 @@
         }).catch(res => {
 
           console.log(res)
+
+          Indicator.close()
 
           this.networkerror = true
         })
@@ -197,6 +206,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    div{
+
+      color:#96969F;
+    }
   }
 
   .mint-spinner {
@@ -227,5 +241,7 @@
       margin-right: 5px;
     }
   }
+
+
 
 </style>

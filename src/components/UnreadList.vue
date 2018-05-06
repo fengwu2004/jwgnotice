@@ -23,7 +23,7 @@
       <div class="simile"></div><div>亲，暂无任何消息</div>
     </div>
     <div v-if="networkerror" class="nodata">
-      <div class="simile"></div><div>亲，网络异常</div>
+      <div class="simile"></div><div>网络异常，请检查网络</div>
     </div>
   </div>
 </template>
