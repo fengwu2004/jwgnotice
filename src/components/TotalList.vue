@@ -1,8 +1,8 @@
 <template>
   <div class="main">
-    <div v-cloak v-if="msgList.length > 0">
+    <div v-cloak v-if="msgList.length > 0 && !networkerror">
       <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange" ref="loadmore">
-        <div class="list" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false" infinite-scroll-distance="50">
+        <div v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-immediate-check="false" infinite-scroll-distance="50">
           <notice-cell v-for="item in msgList" v-bind:key="item.msgId" :item="item" @top-status-change="handleTopChange" @select="selectMessage(item)"></notice-cell>
         </div>
         <div slot="top" class="mint-loadmore-top">
@@ -42,7 +42,10 @@
 
       this.token = getQueryString('token')
 
-      this.loadTop()
+      setTimeout(() => {
+
+        this.loadTop()
+      },0)
     },
     methods:{
       loadMore() {
@@ -58,7 +61,7 @@
 
         this.pageIndex += 1
 
-        this.getList(this.pageIndex, this.pageSize, res => {
+        this.getList(this.pageIndex, this.pageSize).then(res => {
 
           this.msgList = this.msgList.concat(res.msgList)
 
@@ -70,6 +73,10 @@
           this.pageIndex = res.pageIndex
 
           this.loading = false
+
+        }).catch(() => {
+
+          this.networkerror = true
         })
       },
       loadTop() {
@@ -96,8 +103,16 @@
             this.nodata = true
           }
 
-          this.$refs.loadmore.onTopLoaded();
-        }).catch(() => {
+          console.log(this)
+
+          if (this.$refs.loadmore) {
+
+            this.$refs.loadmore.onTopLoaded();
+          }
+
+        }).catch(res => {
+
+          console.log(res)
 
           this.networkerror = true
         })

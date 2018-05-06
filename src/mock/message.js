@@ -4,7 +4,7 @@ let datastr = "{\"resultCode\":\"0\",\"message\":\"\",\"obj\":null,\"msgList\":[
 
 let data = JSON.parse(datastr)
 
-let count = 0
+let count = 120
 let messagelist = []
 
 let img1 = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525541856936&di=36c24ca840b13a965f1393b9e2392342&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2Fd009b3de9c82d158e8c116a38a0a19d8bc3e4264.jpg'
@@ -17,8 +17,8 @@ let createtime3 = 1511943705000
 for (let i = 0; i < count; i++) {
   
   let item = Mock.mock({
-    msgId:'@title',
-    msgSubject: '@increment',
+    msgId:'@increment',
+    msgSubject: '@ctitle(4, 45)',
     'imageUrl|1':[img1, img2, img3],
     'createTime|1':[createtime1, createtime2, createtime3],
   })

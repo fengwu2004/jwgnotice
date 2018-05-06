@@ -12,10 +12,9 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "PingFang SC", "Microsoft Yahei", "Arial", "Helvetica";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
   margin: 0;
   left: 0;
   right: 0;

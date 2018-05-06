@@ -5,6 +5,7 @@
       <img class="icon" width="80" height="80" v-show="icon" :src="icon"/>
     </div>
     <div class="date">{{date}}</div>
+    <div class="line"></div>
   </div>
 </template>
 
@@ -23,9 +24,9 @@
           text += '---' + this.item.summary
         }
 
-        if (text > 50) {
+        if (text.length > 30) {
 
-          return text.substring(0, 50) + '...'
+          return text.substring(0, 30) + '...'
         }
 
         return text
@@ -53,17 +54,24 @@
 
 <style scoped rel="stylesheet/scss" lang="scss">
 
+  .line {
+
+    height: 1px;
+    background: #D9D9DD;
+    margin-left: 1rem;
+    width: calc(100% - 1rem);
+  }
+
   .noticecell {
 
-    border-bottom: 1px solid #D9D9DD;
     height: 7rem;
     position: relative;
   }
 
   .maincontent {
 
-    margin-top: 1rem;
     height: 5rem;
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
   }
@@ -71,14 +79,12 @@
   .text {
 
     font-size: 1rem;
-    margin-right: 1rem;
   }
 
   .icon {
 
-    border-radius: 5px;
+    border-radius: 3px;
     margin-left: 1rem;
-    margin-right: 1rem;
     align-self: center;
   }
 
@@ -86,7 +92,7 @@
 
     position: absolute;
     font-size: 0.8rem;
-    left: 0;
+    padding-left: 1rem;
     bottom: 0.5rem;
   }
 
