@@ -81,7 +81,7 @@
             this.allLoaded = true
           }
 
-          this.pageIndex = res.pageIndex
+          this.pageIndex = parseInt(res.pageIndex)
 
           this.loading = false
 
@@ -106,7 +106,7 @@
 
           this.msgList = res.msgList
 
-          this.pageIndex = res.pageIndex
+          this.pageIndex = parseInt(res.pageIndex)
 
           this.allLoaded = false
 
@@ -170,6 +170,7 @@
 
         let data = {
 
+          isRead:'0',
           userId:this.userId,
           token:this.token,
           pageSize:pageSize,

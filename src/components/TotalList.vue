@@ -81,7 +81,7 @@
             this.allLoaded = true
           }
 
-          this.pageIndex = res.pageIndex
+          this.pageIndex = parseInt(res.pageIndex)
 
           this.loading = false
 
@@ -106,7 +106,7 @@
 
           this.msgList = res.msgList
 
-          this.pageIndex = res.pageIndex
+          this.pageIndex = parseInt(res.pageIndex)
 
           this.allLoaded = false
 
