@@ -20,10 +20,10 @@
       </mt-loadmore>
     </div>
     <div v-if="nodata" class="nodata" @click="loadTop">
-      <div class="simile"></div><div>亲，暂无任何消息</div>
+      <span class="simile"></span><div>亲，暂无任何消息</div>
     </div>
     <div v-if="networkerror" class="nodata" @click="loadTop">
-      <div class="simile"></div><div>网络开了小差，请点击重试</div>
+      <span class="networkerror"></span><div>{{ errormsg }}</div>
     </div>
   </div>
 </template>
@@ -35,11 +35,13 @@
   import { queryMsgList } from "@/api/message"
   import { getQueryString } from "@/utils/common"
 
+  const networkerrormsg = '网络开了小差，请点击重试'
+
   export default {
     components: { NoticeCell },
     mounted() {
 
-      document.title = '内部通知'
+      document.title = '所有内部通知'
 
       let u = navigator.userAgent
 
@@ -131,6 +133,8 @@
 
           Indicator.close()
 
+          this.errormsg = res.data.message
+
           this.networkerror = true
         })
       },
@@ -159,6 +163,8 @@
       },
       getList(pageIndex, pageSize) {
 
+        this.errormsg = networkerrormsg
+
         let data = {
 
           userId:this.userId,
@@ -170,9 +176,16 @@
         return new Promise((resolve, reject) => {
 
           queryMsgList(data)
-            .then(response => {
+            .then(res => {
 
-              resolve(response.data)
+              if (res.data.resultCode == '0') {
+
+                resolve(res.data)
+              }
+              else {
+
+                reject(res)
+              }
             })
             .catch(res => {
 
@@ -191,7 +204,8 @@
         msgList:[],
         allLoaded:false,
         topStatus: '',
-        networkerror:false
+        networkerror:false,
+        errormsg:'网络开了小差，请点击重试'
       }
     },
   }
@@ -206,12 +220,11 @@
     height: 100%;
   }
 
-  .simile {
+  .simile, .networkerror {
 
     display: inline-block;
-    width: 4rem;
-    height: 4rem;
-    margin-bottom: 2rem;
+    width: 1rem;
+    height: 1rem;
     background: url("../assets/simile-icon.png") no-repeat center/100%;
   }
 
@@ -225,13 +238,13 @@
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 
     div{
 
       color:#96969F;
+      font-size: 0.8rem;
     }
   }
 
@@ -263,7 +276,5 @@
       margin-right: 5px;
     }
   }
-
-
 
 </style>

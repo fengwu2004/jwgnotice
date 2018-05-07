@@ -8,10 +8,6 @@ const service = axios.create({
 
 service.interceptors.request.use(config => {
   
-  config.data.token = '28816fb0c5d74a9fae0549fd78e46e0a'
-  
-  config.data.userId = "061a96ebdf0247918aa684b9278053e3"
-  
   return config
   
 }, error => {
