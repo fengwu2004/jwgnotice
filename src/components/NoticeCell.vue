@@ -1,8 +1,8 @@
 <template>
   <div @click="handleClick" class="noticecell">
     <div class="maincontent">
-      <span class="text">{{content}}</span>
-      <img class="icon" style="width: 80px;height: 80px" width="80" height="80" v-show="icon" :src="icon"/>
+      <span class="text" :style="getStyle(icon)">{{content}}</span>
+      <img class="icon" style="width: 80px;height: 80px" :src="icon" v-show="icon"/>
     </div>
     <div class="date">{{date}}</div>
     <div class="line"></div>
@@ -43,6 +43,13 @@
     props:['item'],
     name:'NoticeCell',
     methods:{
+      getStyle(icon) {
+
+        if (icon) {
+
+          return {width:'calc(100% - 80px - 1rem)'}
+        }
+      },
       handleClick() {
 
         this.$emit('select', this.item.id)

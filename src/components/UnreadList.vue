@@ -39,7 +39,7 @@
     components: { NoticeCell },
     mounted() {
 
-      document.title = '内部通知未读'
+      document.title = '内部通知'
 
       let u = navigator.userAgent
 
@@ -48,6 +48,11 @@
       this.userId = getQueryString('userId')
 
       this.token = getQueryString('token')
+
+      Indicator.open({
+        text: '加载中...',
+        spinnerType: 'fading-circle'
+      });
 
       this.loadTop()
     },
@@ -90,11 +95,6 @@
         this.nodata = false
 
         this.pageIndex = 1
-
-        Indicator.open({
-          text: '加载中...',
-          spinnerType: 'fading-circle'
-        });
 
         this.getList(this.pageIndex, this.pageSize).then(res => {
 
@@ -140,6 +140,8 @@
       },
       selectMessage(msg) {
 
+        console.log(msg.msgId)
+
         if (!this.isAndroid) {
 
           if (window.webkit) {
@@ -159,6 +161,8 @@
 
         let data = {
 
+          userId:this.userId,
+          token:this.token,
           pageSize:pageSize,
           pageIndex:pageIndex
         }

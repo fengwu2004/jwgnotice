@@ -140,6 +140,8 @@
       },
       selectMessage(msg) {
 
+        console.log(msg.msgId)
+
         if (!this.isAndroid) {
 
           if (window.webkit) {
@@ -159,6 +161,8 @@
 
         let data = {
 
+          userId:this.userId,
+          token:this.token,
           pageSize:pageSize,
           pageIndex:pageIndex
         }
