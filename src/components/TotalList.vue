@@ -133,7 +133,10 @@
 
           Indicator.close()
 
-          this.errormsg = res.data.message
+          if (res.data) {
+
+            this.errormsg = res.data.message
+          }
 
           this.networkerror = true
         })
