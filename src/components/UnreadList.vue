@@ -229,6 +229,7 @@
     display: inline-block;
     width: 1rem;
     height: 1rem;
+    margin-right: 5px;
     background: url("../assets/simile-icon.png") no-repeat center/100%;
   }
 
