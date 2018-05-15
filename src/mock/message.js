@@ -43,7 +43,7 @@ export default {
     let mockList = messagelist.filter((item, index) => index < pageSize * pageIndex && index >= pageSize * (pageIndex - 1))
     
     return {
-      resultCode:0,
+      resultCode:1,
       msgList:mockList,
       pageSize:pageSize,
       pageIndex:pageIndex

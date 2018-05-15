@@ -19,10 +19,10 @@
         </div>
       </mt-loadmore>
     </div>
-    <div v-if="nodata" class="nodata" @click="loadTop">
+    <div v-if="nodata" class="nodata" @click="reload">
       <span class="simile"></span><div>亲，暂无任何消息</div>
     </div>
-    <div v-if="networkerror" class="nodata" @click="loadTop">
+    <div v-if="networkerror" class="nodata" @click="reload">
       <span class="networkerror"></span><div>{{ errormsg }}</div>
     </div>
   </div>
@@ -59,6 +59,12 @@
       this.loadTop()
     },
     methods:{
+      reload() {
+
+        Indicator.open()
+
+        this.loadTop()
+      },
       loadMore() {
 
         if (this.allLoaded) {
@@ -72,7 +78,8 @@
 
         this.pageIndex += 1
 
-        this.getList(this.pageIndex, this.pageSize).then(res => {
+        this.getList(this.pageIndex, this.pageSize)
+          .then(res => {
 
           this.msgList = this.msgList.concat(res.msgList)
 
@@ -85,10 +92,17 @@
 
           this.loading = false
 
-        }).catch(() => {
-
-          this.networkerror = true
         })
+          .catch(res => {
+
+            this.errormsg = res.errormsg
+
+            this.networkerror = true
+          })
+          .finally(() => {
+
+            Indicator.close()
+          })
       },
       loadTop() {
 
@@ -98,9 +112,8 @@
 
         this.pageIndex = 1
 
-        this.getList(this.pageIndex, this.pageSize).then(res => {
-
-          Indicator.close()
+        this.getList(this.pageIndex, this.pageSize)
+          .then(res => {
 
           this.networkerror = false
 
@@ -120,25 +133,21 @@
             this.nodata = true
           }
 
-          console.log(this)
-
           if (this.$refs.loadmore) {
 
             this.$refs.loadmore.onTopLoaded();
           }
+        })
+          .catch(res => {
 
-        }).catch(res => {
-
-          console.log(res)
-
-          Indicator.close()
-
-          if (res.data) {
-
-            this.errormsg = res.data.message
-          }
+          this.errormsg = res.errormsg
 
           this.networkerror = true
+
+        })
+          .finally(() => {
+
+          Indicator.close()
         })
       },
       handleTopChange(status) {
@@ -185,15 +194,15 @@
               if (res.data.resultCode == '0') {
 
                 resolve(res.data)
-              }
-              else {
 
-                reject(res)
+                return
               }
+
+              reject({type:'server', errormsg:'服务开了小差，请点击重试'})
             })
-            .catch(res => {
+            .catch(() => {
 
-              reject(res)
+              reject({type:'network', errormsg:'网络异常，请检查网络'})
             })
         })
       },
