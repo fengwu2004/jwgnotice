@@ -2,7 +2,7 @@
   <div class="main">
     <div class="title">{{title}}</div>
     <div class="date">{{date}}</div>
-    <div class="content" v-html="content"></div>a
+    <div class="content" v-html="content"></div>
   </div>
 </template>
 
